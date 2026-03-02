@@ -6,29 +6,33 @@
     <title>ACCUM — Fair Proof-of-Work</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif;}
         :root{
-            --bg-header:#0a0c0f;
-            --bg-main:#1a2f1a;
-            --bg-card:#15181e;
-            --border-dark:#000000;
-            --gold:#ffd700;
-            --text-primary:#f0f0f0;
-            --btn-bg:#1e3a1e;
+            --bg-page:#e2f0da;        /* светлый зеленоватый фон */
+            --bg-card:#ffffff;         /* карточки белые */
+            --bg-header:#2a5c2a;       /* шапка тёмно-зелёная */
+            --border-light:#b0c4a2;    /* мягкая зелёная граница */
+            --gold:#b8860b;            /* приглушённое золото */
+            --text-dark:#1e2a1e;
+            --text-soft:#2f3e2f;
+            --btn-green:#3b6e3b;
         }
         body{
-            background:var(--bg-main);
-            color:var(--text-primary);
-            font-family:Arial,sans-serif;
+            background:var(--bg-page);
+            color:var(--text-dark);
             font-size:14px;
             line-height:1.5;
+            padding:0 0 20px;
         }
         .container{max-width:1200px;margin:0 auto;padding:0 15px;}
+
+        /* шапка компактная */
         .header{
             background:var(--bg-header);
             border-bottom:2px solid var(--gold);
-            padding:10px 0;
+            padding:8px 0;
             margin-bottom:20px;
+            color:white;
         }
         .header-content{
             display:flex;
@@ -36,37 +40,46 @@
             align-items:center;
             flex-wrap:wrap;
         }
-        .logo i{color:var(--gold);font-size:28px;font-style:normal;}
-        .logo span{color:var(--gold);font-size:24px;font-weight:700;}
+        .logo i{color:var(--gold);font-size:26px;font-style:normal;}
+        .logo span{color:var(--gold);font-size:22px;font-weight:700;}
         .header-links{
             display:flex;
             align-items:center;
             gap:20px;
             font-size:13px;
         }
-        .header-links a{color:#aaa;text-decoration:none;}
+        .header-links a{color:#ddd;text-decoration:none;}
         .header-links a:hover{color:var(--gold);}
         .lang-btn{
-            background:var(--btn-bg);
+            background:#3a5a3a;
             color:white;
             border:1px solid black;
-            padding:4px 8px;
+            padding:3px 8px;
             font-size:12px;
             cursor:pointer;
         }
-        .lang-btn.active{background:var(--gold);color:black;}
+        .lang-btn.active{background:var(--gold);color:black;border-color:var(--gold);}
         .dev-status{
             text-align:center;
-            font-size:12px;
+            font-size:11px;
             color:#ffd700;
-            margin-top:5px;
+            margin-top:4px;
         }
+        .connection-status{
+            font-size:12px;
+            padding:2px 8px;
+            background:#1e3a1e;
+            border-radius:12px;
+        }
+
+        /* карточки светлые, но строгие */
         .section-title{
-            color:var(--gold);
+            color:var(--bg-header);
             font-size:18px;
-            border-bottom:1px solid black;
-            margin:20px 0 15px;
-            padding-bottom:5px;
+            font-weight:600;
+            border-bottom:2px solid var(--gold);
+            margin:20px 0 12px;
+            padding-bottom:4px;
         }
         .testnet-grid{
             display:grid;
@@ -75,65 +88,98 @@
         }
         .testnet-controls{
             background:var(--bg-card);
-            border:1px solid black;
+            border:1px solid var(--border-light);
+            border-radius:6px;
             padding:15px;
+            box-shadow:0 2px 4px rgba(0,0,0,0.03);
         }
         .button-group{
             display:flex;
-            gap:10px;
+            gap:8px;
             margin-bottom:15px;
         }
         .btn{
-            background:var(--btn-bg);
-            border:1px solid black;
+            background:var(--btn-green);
+            border:1px solid #1e3a1e;
             color:white;
-            padding:8px 15px;
+            padding:8px 12px;
             font-size:13px;
+            font-weight:500;
             cursor:pointer;
             flex:1;
+            border-radius:4px;
         }
-        .btn:hover{background:#2c5a2c;border-color:var(--gold);}
+        .btn:hover{background:#2d8c2d;border-color:var(--gold);}
         .btn:disabled{opacity:0.5;cursor:not-allowed;}
+        
         .genesis-data{
-            background:#1a1e24;
-            border:1px solid black;
-            padding:10px;
-            font-family:monospace;
+            background:#f5f9f2;
+            border:1px solid var(--border-light);
+            padding:10px 12px;
+            font-family:'Courier New',monospace;
             font-size:12px;
             display:grid;
             grid-template-columns:repeat(2,1fr);
-            gap:5px;
+            gap:6px 10px;
+            border-radius:4px;
         }
-        .data-row{display:flex;justify-content:space-between;}
-        .data-label{color:var(--gold);}
+        .data-row{display:flex;justify-content:space-between;border-bottom:1px dotted #cbd5c0;padding:2px 0;}
+        .data-label{color:var(--bg-header);font-weight:600;}
+        .data-value{font-weight:500;color:#000;}
+
         .chart-container{
             background:var(--bg-card);
-            border:1px solid black;
-            padding:10px;
-            height:220px;
+            border:1px solid var(--border-light);
+            border-radius:6px;
+            padding:8px;
+            height:200px;
         }
         .tester-counter{
             grid-column:span 2;
             background:var(--bg-card);
-            border:1px solid black;
-            padding:10px;
+            border:1px solid var(--border-light);
+            border-radius:6px;
+            padding:12px 16px;
             display:flex;
             justify-content:space-between;
             align-items:center;
+            font-size:16px;
         }
-        .counter-value{font-size:22px;font-weight:700;color:var(--gold);}
-        .miners-table{
+        .counter-value{
+            font-size:28px;
+            font-weight:700;
+            color:var(--bg-header);
+            background:#e2f0da;
+            padding:4px 16px;
+            border-radius:40px;
+            border:1px solid var(--border-light);
+        }
+
+        /* таблица сравнения */
+        .compare-table{
             width:100%;
             border-collapse:collapse;
-            font-size:12px;
+            font-size:13px;
+            background:var(--bg-card);
+            border:1px solid var(--border-light);
+            border-radius:6px;
+            overflow:hidden;
         }
-        .miners-table th,
-        .miners-table td{
-            border:1px solid black;
-            padding:5px;
-            text-align:left;
+        .compare-table th{
+            background:#d4e2ca;
+            color:#1e3a1e;
+            font-weight:600;
+            padding:8px 6px;
+            border-bottom:2px solid var(--gold);
         }
-        .miners-table th{color:var(--gold);background:#1e2429;}
+        .compare-table td{
+            padding:8px 6px;
+            border-bottom:1px solid #d0ddc0;
+        }
+        .compare-table tr:last-child td{border-bottom:none;}
+        .gold-cell{color:var(--bg-header);font-weight:700;}
+
+        /* инфо-сетка */
         .info-grid{
             display:grid;
             grid-template-columns:1fr 1fr;
@@ -142,42 +188,87 @@
         }
         .info-card{
             background:var(--bg-card);
-            border:1px solid black;
+            border:1px solid var(--border-light);
+            border-radius:6px;
             padding:15px;
         }
-        .info-title{color:var(--gold);font-size:16px;margin-bottom:10px;}
-        .github-links{list-style:none;}
-        .github-links li{margin-bottom:8px;}
+        .info-title{
+            color:var(--bg-header);
+            font-size:16px;
+            font-weight:700;
+            margin-bottom:12px;
+            border-left:4px solid var(--gold);
+            padding-left:8px;
+        }
+        .github-links{
+            list-style:none;
+        }
+        .github-links li{
+            margin-bottom:8px;
+        }
         .github-links a{
-            color:#aaa;
+            color:var(--text-dark);
             text-decoration:none;
             display:block;
-            padding:5px;
-            background:#1e2429;
-            border:1px solid black;
+            padding:6px 10px;
+            background:#ecf3e8;
+            border:1px solid var(--border-light);
+            border-radius:4px;
+            font-weight:500;
         }
-        .github-links a:hover{color:var(--gold);border-color:var(--gold);}
+        .github-links a:hover{
+            background:var(--gold);
+            color:black;
+            border-color:var(--bg-header);
+        }
         .roadmap-item{
             display:flex;
-            gap:10px;
+            gap:12px;
             margin-bottom:8px;
-            padding:5px;
-            background:#1e2429;
-            border:1px solid black;
+            padding:8px 12px;
+            background:#ecf3e8;
+            border:1px solid var(--border-light);
+            border-radius:4px;
         }
-        .roadmap-quarter{color:var(--gold);font-weight:600;min-width:60px;}
+        .roadmap-quarter{
+            color:var(--bg-header);
+            font-weight:700;
+            min-width:65px;
+        }
+
+        /* инструкция для тестировщиков */
+        .instruction-block{
+            background:var(--bg-card);
+            border:2px solid var(--border-light);
+            border-radius:8px;
+            padding:18px 20px;
+            margin:25px 0 10px;
+            border-left:6px solid var(--bg-header);
+        }
+        .instruction-title{
+            color:var(--bg-header);
+            font-size:18px;
+            font-weight:700;
+            margin-bottom:12px;
+        }
+        .instruction-code{
+            background:#1e2a1e;
+            color:#e2f0da;
+            padding:6px 12px;
+            border-radius:6px;
+            font-family:'Courier New',monospace;
+            font-size:13px;
+            display:inline-block;
+            margin:5px 0;
+            border:1px solid var(--gold);
+        }
         .footer{
             margin-top:30px;
-            padding:15px 0;
-            border-top:1px solid black;
+            padding:16px 0;
+            border-top:2px solid var(--border-light);
             font-size:12px;
             text-align:center;
-            color:#888;
-        }
-        .connection-status{
-            font-size:12px;
-            padding:4px 8px;
-            background:#1e3a1e;
+            color:#3b5e3b;
         }
     </style>
 </head>
@@ -199,31 +290,34 @@
                     </div>
                 </div>
             </div>
-            <div class="dev-status">ACCUM в стадии разработки и тестирования</div>
+            <div class="dev-status">ACCUM — публичный testnet · Fair PoW · PoCI · Argon2</div>
         </div>
     </header>
 
     <main class="container">
+        <!-- ЧТО ТАКОЕ ACCUM -->
         <section>
             <h2 class="section-title">ЧТО ТАКОЕ ACCUM</h2>
-            <div style="background:#15181e;border:1px solid black;padding:15px;">
-                <p style="margin-bottom:10px;"><span style="color:#ffd700;">Fair Proof-of-Work</span> где КАЖДЫЙ майнер получает награду</p>
+            <div style="background:#ffffff;border:1px solid #b0c4a2;border-radius:6px;padding:15px;">
+                <p style="margin-bottom:8px;"><span style="color:#2a5c2a;font-weight:700;">Fair Proof-of-Work</span> — каждый майнер получает награду в каждом блоке</p>
                 <p>Аккумулятивный майнинг (ACM) — логарифмическая зависимость награды от времени участия</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:10px;">
-                    <span>• Аккумулятивный майнинг</span>
-                    <span>• PoCI: 6 факторов</span>
-                    <span>• Argon2 ASIC-resistant</span>
-                    <span>• 150M эмиссия, λ=0.12</span>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+                    <span>✓ Аккумулятивный майнинг</span>
+                    <span>✓ PoCI: 6 факторов</span>
+                    <span>✓ Argon2 ASIC-resistant</span>
+                    <span>✓ 150M эмиссия, λ=0.12</span>
                 </div>
             </div>
         </section>
 
+        <!-- ТЕСТНЕТ -->
         <section>
             <h2 class="section-title">ПУБЛИЧНЫЙ ТЕСТНЕТ</h2>
             <div class="testnet-grid">
+                <!-- левая колонка: данные + кнопки -->
                 <div class="testnet-controls">
                     <div class="button-group">
-                        <button class="btn" id="startMining" disabled>⚡ ПУСК</button>
+                        <button class="btn" id="startMining" disabled>⚡ ПУСК МАЙНИНГА</button>
                         <button class="btn" id="refreshData">🔄 ОБНОВИТЬ</button>
                     </div>
                     <div class="genesis-data">
@@ -235,45 +329,58 @@
                         <div class="data-row"><span class="data-label">Supply:</span><span class="data-value" id="supply">—</span></div>
                     </div>
                 </div>
+                <!-- правая колонка: график защиты от сибил -->
                 <div class="chart-container">
                     <canvas id="sybilChart"></canvas>
                 </div>
+                <!-- нижний счётчик тестирующих -->
                 <div class="tester-counter">
-                    <span>👥 ТЕСТИРУЮТ:</span>
+                    <span style="font-weight:600;">👥 СЕЙЧАС ТЕСТИРУЮТ:</span>
                     <span class="counter-value" id="activeTesters">—</span>
                 </div>
             </div>
         </section>
 
+        <!-- БЛОК ИНСТРУКЦИИ ДЛЯ ТЕСТИРОВЩИКОВ -->
+        <div class="instruction-block">
+            <div class="instruction-title">🚀 ПРИСОЕДИНИСЬ К ТЕСТИРОВАНИЮ (P2P + майнинг)</div>
+            <p style="margin-bottom:10px;">1️⃣ Установи Rust (если нет): <span class="instruction-code">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</span></p>
+            <p style="margin-bottom:10px;">2️⃣ Склонируй ноду: <span class="instruction-code">git clone https://github.com/andreudumitro-eng/accum-node</span></p>
+            <p style="margin-bottom:10px;">3️⃣ Запусти майнинг: <span class="instruction-code">cd accum-node &amp;&amp; cargo run --release</span></p>
+            <p style="margin-bottom:0;">4️⃣ Твоя нода подключится к <strong>accum.site:9337</strong> и начнёт получать награды</p>
+            <p style="margin-top:10px;color:#2a5c2a;">✅ Награда распределяется между всеми майнерами (PoCI). Количество активных — в счётчике выше.</p>
+        </div>
+
+        <!-- ТАБЛИЦА СРАВНЕНИЯ -->
         <section>
             <h2 class="section-title">СРАВНЕНИЕ</h2>
-            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <table class="compare-table">
                 <thead>
-                    <tr style="background:#1e2429;">
-                        <th></th><th>Bitcoin</th><th>Kaspa</th><th>Monero</th><th>ACCUM</th>
-                    </tr>
+                    <tr><th></th><th>Bitcoin</th><th>Kaspa</th><th>Monero</th><th>ACCUM</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Награда</td><td>1 поб.</td><td>1 поб.</td><td>1 поб.</td><td style="color:#ffd700;">ВСЕ</td></tr>
-                    <tr><td>51% атака</td><td>Выгодна</td><td>Выгодна</td><td>Выгодна</td><td style="color:#ffd700;">НЕВЫГОДНА</td></tr>
-                    <tr><td>ASIC-устойч.</td><td>Нет</td><td>Частично</td><td>Частично</td><td style="color:#ffd700;">ДА</td></tr>
+                    <tr><td>Награда</td><td>1 победитель</td><td>1 победитель</td><td>1 победитель</td><td class="gold-cell">ВСЕ МАЙНЕРЫ</td></tr>
+                    <tr><td>51% атака</td><td>Выгодна</td><td>Выгодна</td><td>Выгодна</td><td class="gold-cell">НЕВЫГОДНА</td></tr>
+                    <tr><td>ASIC-устойчивость</td><td>Нет</td><td>Частично</td><td>Частично</td><td class="gold-cell">ДА (Argon2)</td></tr>
+                    <tr><td>Sybil-защита</td><td>Нет</td><td>Нет</td><td>Нет</td><td class="gold-cell">PoCI (6 факторов)</td></tr>
                 </tbody>
             </table>
         </section>
 
+        <!-- GITHUB + ROADMAP -->
         <div class="info-grid">
             <div class="info-card">
                 <h3 class="info-title">📦 GITHUB</h3>
                 <ul class="github-links">
-                    <li><a href="https://github.com/andreudumitro-eng/accum-node">⚡ accum-node</a></li>
-                    <li><a href="https://github.com/andreudumitro-eng/ACCUM_whitepaper_v2.2.md">📄 whitepaper</a></li>
-                    <li><a href="https://github.com/andreudumitro-eng/accum.site">🌐 accum-site</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/accum-node" target="_blank">⚡ accum-node (core)</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/ACCUM_whitepaper_v3.0.md" target="_blank">📄 whitepaper v3.0</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/accum.site" target="_blank">🌐 accum-site (этот сайт)</a></li>
                 </ul>
             </div>
             <div class="info-card">
-                <h3 class="info-title">🗺 ROADMAP</h3>
-                <div class="roadmap-item"><span class="roadmap-quarter">Q2 2026</span> Публичный тестнет</div>
-                <div class="roadmap-item"><span class="roadmap-quarter">Q3 2026</span> Аудит</div>
+                <h3 class="info-title">🗓 ROADMAP</h3>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q2 2026</span> Публичный testnet (активен)</div>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q3 2026</span> Аудит, улучшения</div>
                 <div class="roadmap-item"><span class="roadmap-quarter">Q4 2026</span> Mainnet</div>
             </div>
         </div>
@@ -281,70 +388,94 @@
 
     <footer class="footer">
         <div>© 2026 ACCUM — Open source · Fair launch · No premine</div>
-        <div style="margin-top:5px;">* Данные для примера, не инвестиционная рекомендация</div>
+        <div style="margin-top:5px;">* Данные в реальном времени с testnet-ноды. Присоединяйся к майнингу!</div>
     </footer>
 
     <script>
+        // переключение языков (заглушка, но кнопки работают)
         function switchLanguage(lang){
             document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+            // здесь можно добавить перевод текста, если нужно
         }
         document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',function(){switchLanguage(this.dataset.lang);}));
 
-        const WS_URL = 'ws://91.198.220.131';
-        let socket,connected=false,chart;
+        // WebSocket подключение к твоей ноде
+        const WS_URL = 'ws://accum.site:8080';
+        let socket, connected = false, chart;
 
-        function connect(){
-            try{
-                socket=new WebSocket(WS_URL);
-                socket.onopen=()=>{
-                    connected=true;
-                    document.getElementById('connectionStatus').innerHTML='🟢 connected';
-                    document.getElementById('startMining').disabled=false;
+        function connect() {
+            try {
+                socket = new WebSocket(WS_URL);
+                
+                socket.onopen = () => {
+                    connected = true;
+                    document.getElementById('connectionStatus').innerHTML = '🟢 connected';
+                    document.getElementById('startMining').disabled = false;
                     requestData();
                 };
-                socket.onclose=()=>{
-                    connected=false;
-                    document.getElementById('connectionStatus').innerHTML='🔴 отключено';
-                    document.getElementById('startMining').disabled=true;
-                    setTimeout(connect,5000);
+                
+                socket.onclose = () => {
+                    connected = false;
+                    document.getElementById('connectionStatus').innerHTML = '🔴 отключено';
+                    document.getElementById('startMining').disabled = true;
+                    setTimeout(connect, 5000);
                 };
-                socket.onmessage=(e)=>{
-                    try{
-                        const d=JSON.parse(e.data);
-                        if(d.type==='stats'){
-                            document.getElementById('blockHeight').textContent=d.blocks||'0';
-                            document.getElementById('minerCount').textContent=d.miners||'0';
-                            document.getElementById('activeTesters').textContent=d.miners||'0';
-                            document.getElementById('supply').textContent=d.supply?d.supply+'/150M':'—';
+                
+                socket.onmessage = (e) => {
+                    try {
+                        const data = JSON.parse(e.data);
+                        if (data.type === 'stats') {
+                            document.getElementById('blockHeight').textContent = data.blocks || '0';
+                            document.getElementById('blockHash').textContent = data.last_hash ? data.last_hash.substring(0,16)+'…' : '—';
+                            document.getElementById('blockTime').textContent = data.last_time || '—';
+                            document.getElementById('txCount').textContent = data.transactions || '0';
+                            document.getElementById('minerCount').textContent = data.miners || '0';
+                            document.getElementById('activeTesters').textContent = data.miners || '0';
+                            const supply = data.supply ? data.supply + ' / 150M' : '—';
+                            document.getElementById('supply').textContent = supply;
                         }
-                    }catch(e){}
+                    } catch(e){}
                 };
-            }catch(e){setTimeout(connect,5000);}
+            } catch(e) {
+                setTimeout(connect, 5000);
+            }
         }
 
-        function requestData(){
-            if(socket&&connected) socket.send('get_stats');
+        function requestData() {
+            if (socket && connected) socket.send('get_stats');
         }
 
-        document.getElementById('startMining').addEventListener('click',()=>{
-            if(socket&&connected) socket.send('start_mining');
+        document.getElementById('startMining')?.addEventListener('click', () => {
+            if (socket && connected) socket.send('start_mining');
         });
-        document.getElementById('refreshData').addEventListener('click',requestData);
+
+        document.getElementById('refreshData')?.addEventListener('click', requestData);
 
         connect();
-        setInterval(()=>{if(connected)requestData();},10000);
+        setInterval(() => { if (connected) requestData(); }, 8000);
 
-        const ctx=document.getElementById('sybilChart').getContext('2d');
-        chart=new Chart(ctx,{
-            type:'line',
-            data:{
-                labels:['0%','20%','40%','60%','80%','100%'],
-                datasets:[
-                    {label:'Bitcoin',data:[0,20,40,60,80,100],borderColor:'#888',borderDash:[5,3]},
-                    {label:'ACCUM',data:[0,8,18,30,50,100],borderColor:'#ffd700'}
-                ]
-            }
-        });
+        // График Sybil-защиты (Bitcoin линейный, ACCUM выпуклый)
+        const ctx = document.getElementById('sybilChart')?.getContext('2d');
+        if (ctx) {
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['0%', '20%', '40%', '60%', '80%', '100%'],
+                    datasets: [
+                        { label: 'Bitcoin (линейная)', data: [0, 20, 40, 60, 80, 100], borderColor: '#888', borderDash: [5,3] },
+                        { label: 'ACCUM (PoCI)', data: [0, 8, 18, 30, 50, 100], borderColor: '#2a5c2a', borderWidth: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#1e2a1e' } } },
+                    scales: {
+                        y: { grid: { color: '#cbd5c0' }, ticks: { color: '#1e2a1e' } },
+                        x: { grid: { color: '#cbd5c0' }, ticks: { color: '#1e2a1e' } }
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
