@@ -1,15 +1,350 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ACCUM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACCUM — Fair Proof-of-Work</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body{background:#1a2f1a;color:#f0f0f0;font-family:Arial;padding:20px;}
-        h1{color:#ffd700;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        :root{
+            --bg-header:#0a0c0f;
+            --bg-main:#1a2f1a;
+            --bg-card:#15181e;
+            --border-dark:#000000;
+            --gold:#ffd700;
+            --text-primary:#f0f0f0;
+            --btn-bg:#1e3a1e;
+        }
+        body{
+            background:var(--bg-main);
+            color:var(--text-primary);
+            font-family:Arial,sans-serif;
+            font-size:14px;
+            line-height:1.5;
+        }
+        .container{max-width:1200px;margin:0 auto;padding:0 15px;}
+        .header{
+            background:var(--bg-header);
+            border-bottom:2px solid var(--gold);
+            padding:10px 0;
+            margin-bottom:20px;
+        }
+        .header-content{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+        }
+        .logo i{color:var(--gold);font-size:28px;font-style:normal;}
+        .logo span{color:var(--gold);font-size:24px;font-weight:700;}
+        .header-links{
+            display:flex;
+            align-items:center;
+            gap:20px;
+            font-size:13px;
+        }
+        .header-links a{color:#aaa;text-decoration:none;}
+        .header-links a:hover{color:var(--gold);}
+        .lang-btn{
+            background:var(--btn-bg);
+            color:white;
+            border:1px solid black;
+            padding:4px 8px;
+            font-size:12px;
+            cursor:pointer;
+        }
+        .lang-btn.active{background:var(--gold);color:black;}
+        .dev-status{
+            text-align:center;
+            font-size:12px;
+            color:#ffd700;
+            margin-top:5px;
+        }
+        .section-title{
+            color:var(--gold);
+            font-size:18px;
+            border-bottom:1px solid black;
+            margin:20px 0 15px;
+            padding-bottom:5px;
+        }
+        .testnet-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:15px;
+        }
+        .testnet-controls{
+            background:var(--bg-card);
+            border:1px solid black;
+            padding:15px;
+        }
+        .button-group{
+            display:flex;
+            gap:10px;
+            margin-bottom:15px;
+        }
+        .btn{
+            background:var(--btn-bg);
+            border:1px solid black;
+            color:white;
+            padding:8px 15px;
+            font-size:13px;
+            cursor:pointer;
+            flex:1;
+        }
+        .btn:hover{background:#2c5a2c;border-color:var(--gold);}
+        .btn:disabled{opacity:0.5;cursor:not-allowed;}
+        .genesis-data{
+            background:#1a1e24;
+            border:1px solid black;
+            padding:10px;
+            font-family:monospace;
+            font-size:12px;
+            display:grid;
+            grid-template-columns:repeat(2,1fr);
+            gap:5px;
+        }
+        .data-row{display:flex;justify-content:space-between;}
+        .data-label{color:var(--gold);}
+        .chart-container{
+            background:var(--bg-card);
+            border:1px solid black;
+            padding:10px;
+            height:220px;
+        }
+        .tester-counter{
+            grid-column:span 2;
+            background:var(--bg-card);
+            border:1px solid black;
+            padding:10px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .counter-value{font-size:22px;font-weight:700;color:var(--gold);}
+        .miners-table{
+            width:100%;
+            border-collapse:collapse;
+            font-size:12px;
+        }
+        .miners-table th,
+        .miners-table td{
+            border:1px solid black;
+            padding:5px;
+            text-align:left;
+        }
+        .miners-table th{color:var(--gold);background:#1e2429;}
+        .info-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:15px;
+            margin:20px 0;
+        }
+        .info-card{
+            background:var(--bg-card);
+            border:1px solid black;
+            padding:15px;
+        }
+        .info-title{color:var(--gold);font-size:16px;margin-bottom:10px;}
+        .github-links{list-style:none;}
+        .github-links li{margin-bottom:8px;}
+        .github-links a{
+            color:#aaa;
+            text-decoration:none;
+            display:block;
+            padding:5px;
+            background:#1e2429;
+            border:1px solid black;
+        }
+        .github-links a:hover{color:var(--gold);border-color:var(--gold);}
+        .roadmap-item{
+            display:flex;
+            gap:10px;
+            margin-bottom:8px;
+            padding:5px;
+            background:#1e2429;
+            border:1px solid black;
+        }
+        .roadmap-quarter{color:var(--gold);font-weight:600;min-width:60px;}
+        .footer{
+            margin-top:30px;
+            padding:15px 0;
+            border-top:1px solid black;
+            font-size:12px;
+            text-align:center;
+            color:#888;
+        }
+        .connection-status{
+            font-size:12px;
+            padding:4px 8px;
+            background:#1e3a1e;
+        }
     </style>
 </head>
 <body>
-    <h1>⚡ ACCUM работает</h1>
-    <p>Сайт загружен вручную</p>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i>⚡</i>
+                    <span>ACCUM</span>
+                </div>
+                <div class="header-links">
+                    <span class="connection-status" id="connectionStatus">🔴 отключено</span>
+                    <a href="mailto:andreudumitro@gmail.com">✉️ andreudumitro@gmail.com</a>
+                    <a href="https://twitter.com/AndreDumitro" target="_blank">𝕏 @AndreDumitro</a>
+                    <div class="lang-switch">
+                        <button class="lang-btn active" data-lang="ru">RU</button>
+                        <button class="lang-btn" data-lang="en">EN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="dev-status">ACCUM в стадии разработки и тестирования</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2 class="section-title">ЧТО ТАКОЕ ACCUM</h2>
+            <div style="background:#15181e;border:1px solid black;padding:15px;">
+                <p style="margin-bottom:10px;"><span style="color:#ffd700;">Fair Proof-of-Work</span> где КАЖДЫЙ майнер получает награду</p>
+                <p>Аккумулятивный майнинг (ACM) — логарифмическая зависимость награды от времени участия</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:10px;">
+                    <span>• Аккумулятивный майнинг</span>
+                    <span>• PoCI: 6 факторов</span>
+                    <span>• Argon2 ASIC-resistant</span>
+                    <span>• 150M эмиссия, λ=0.12</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">ПУБЛИЧНЫЙ ТЕСТНЕТ</h2>
+            <div class="testnet-grid">
+                <div class="testnet-controls">
+                    <div class="button-group">
+                        <button class="btn" id="startMining" disabled>⚡ ПУСК</button>
+                        <button class="btn" id="refreshData">🔄 ОБНОВИТЬ</button>
+                    </div>
+                    <div class="genesis-data">
+                        <div class="data-row"><span class="data-label">Высота:</span><span class="data-value" id="blockHeight">—</span></div>
+                        <div class="data-row"><span class="data-label">Хеш:</span><span class="data-value" id="blockHash">—</span></div>
+                        <div class="data-row"><span class="data-label">Время:</span><span class="data-value" id="blockTime">—</span></div>
+                        <div class="data-row"><span class="data-label">Транзакций:</span><span class="data-value" id="txCount">—</span></div>
+                        <div class="data-row"><span class="data-label">Майнеров:</span><span class="data-value" id="minerCount">—</span></div>
+                        <div class="data-row"><span class="data-label">Supply:</span><span class="data-value" id="supply">—</span></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="sybilChart"></canvas>
+                </div>
+                <div class="tester-counter">
+                    <span>👥 ТЕСТИРУЮТ:</span>
+                    <span class="counter-value" id="activeTesters">—</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">СРАВНЕНИЕ</h2>
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                    <tr style="background:#1e2429;">
+                        <th></th><th>Bitcoin</th><th>Kaspa</th><th>Monero</th><th>ACCUM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Награда</td><td>1 поб.</td><td>1 поб.</td><td>1 поб.</td><td style="color:#ffd700;">ВСЕ</td></tr>
+                    <tr><td>51% атака</td><td>Выгодна</td><td>Выгодна</td><td>Выгодна</td><td style="color:#ffd700;">НЕВЫГОДНА</td></tr>
+                    <tr><td>ASIC-устойч.</td><td>Нет</td><td>Частично</td><td>Частично</td><td style="color:#ffd700;">ДА</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <div class="info-grid">
+            <div class="info-card">
+                <h3 class="info-title">📦 GITHUB</h3>
+                <ul class="github-links">
+                    <li><a href="https://github.com/andreudumitro-eng/accum-node">⚡ accum-node</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/ACCUM_whitepaper_v2.2.md">📄 whitepaper</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/accum.site">🌐 accum-site</a></li>
+                </ul>
+            </div>
+            <div class="info-card">
+                <h3 class="info-title">🗺 ROADMAP</h3>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q2 2026</span> Публичный тестнет</div>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q3 2026</span> Аудит</div>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q4 2026</span> Mainnet</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div>© 2026 ACCUM — Open source · Fair launch · No premine</div>
+        <div style="margin-top:5px;">* Данные для примера, не инвестиционная рекомендация</div>
+    </footer>
+
+    <script>
+        function switchLanguage(lang){
+            document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+        }
+        document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',function(){switchLanguage(this.dataset.lang);}));
+
+        const WS_URL='ws://91.198.220.131:8080';
+        let socket,connected=false,chart;
+
+        function connect(){
+            try{
+                socket=new WebSocket(WS_URL);
+                socket.onopen=()=>{
+                    connected=true;
+                    document.getElementById('connectionStatus').innerHTML='🟢 connected';
+                    document.getElementById('startMining').disabled=false;
+                    requestData();
+                };
+                socket.onclose=()=>{
+                    connected=false;
+                    document.getElementById('connectionStatus').innerHTML='🔴 отключено';
+                    document.getElementById('startMining').disabled=true;
+                    setTimeout(connect,5000);
+                };
+                socket.onmessage=(e)=>{
+                    try{
+                        const d=JSON.parse(e.data);
+                        if(d.type==='stats'){
+                            document.getElementById('blockHeight').textContent=d.blocks||'0';
+                            document.getElementById('minerCount').textContent=d.miners||'0';
+                            document.getElementById('activeTesters').textContent=d.miners||'0';
+                            document.getElementById('supply').textContent=d.supply?d.supply+'/150M':'—';
+                        }
+                    }catch(e){}
+                };
+            }catch(e){setTimeout(connect,5000);}
+        }
+
+        function requestData(){
+            if(socket&&connected) socket.send('get_stats');
+        }
+
+        document.getElementById('startMining').addEventListener('click',()=>{
+            if(socket&&connected) socket.send('start_mining');
+        });
+        document.getElementById('refreshData').addEventListener('click',requestData);
+
+        connect();
+        setInterval(()=>{if(connected)requestData();},10000);
+
+        const ctx=document.getElementById('sybilChart').getContext('2d');
+        chart=new Chart(ctx,{
+            type:'line',
+            data:{
+                labels:['0%','20%','40%','60%','80%','100%'],
+                datasets:[
+                    {label:'Bitcoin',data:[0,20,40,60,80,100],borderColor:'#888',borderDash:[5,3]},
+                    {label:'ACCUM',data:[0,8,18,30,50,100],borderColor:'#ffd700'}
+                ]
+            }
+        });
+    </script>
 </body>
 </html>
