@@ -8,13 +8,12 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Roboto,system-ui,sans-serif;}
         :root{
-            --bg-page:#e2f0da;        /* светлый зеленоватый фон */
-            --bg-card:#ffffff;         /* карточки белые */
+            --bg-page:#e2f0da;        /* светлый зеленоватый */
+            --bg-card:#ffffff;         /* белые карточки */
             --bg-header:#2a5c2a;       /* шапка тёмно-зелёная */
-            --border-light:#b0c4a2;    /* мягкая зелёная граница */
-            --gold:#b8860b;            /* приглушённое золото */
+            --border-light:#b0c4a2;
+            --gold:#ffd700;            /* золото */
             --text-dark:#1e2a1e;
-            --text-soft:#2f3e2f;
             --btn-green:#3b6e3b;
         }
         body{
@@ -25,8 +24,6 @@
             padding:0 0 20px;
         }
         .container{max-width:1200px;margin:0 auto;padding:0 15px;}
-
-        /* шапка компактная */
         .header{
             background:var(--bg-header);
             border-bottom:2px solid var(--gold);
@@ -71,8 +68,6 @@
             background:#1e3a1e;
             border-radius:12px;
         }
-
-        /* карточки светлые, но строгие */
         .section-title{
             color:var(--bg-header);
             font-size:18px;
@@ -111,7 +106,6 @@
         }
         .btn:hover{background:#2d8c2d;border-color:var(--gold);}
         .btn:disabled{opacity:0.5;cursor:not-allowed;}
-        
         .genesis-data{
             background:#f5f9f2;
             border:1px solid var(--border-light);
@@ -126,7 +120,6 @@
         .data-row{display:flex;justify-content:space-between;border-bottom:1px dotted #cbd5c0;padding:2px 0;}
         .data-label{color:var(--bg-header);font-weight:600;}
         .data-value{font-weight:500;color:#000;}
-
         .chart-container{
             background:var(--bg-card);
             border:1px solid var(--border-light);
@@ -154,8 +147,6 @@
             border-radius:40px;
             border:1px solid var(--border-light);
         }
-
-        /* таблица сравнения */
         .compare-table{
             width:100%;
             border-collapse:collapse;
@@ -178,8 +169,6 @@
         }
         .compare-table tr:last-child td{border-bottom:none;}
         .gold-cell{color:var(--bg-header);font-weight:700;}
-
-        /* инфо-сетка */
         .info-grid{
             display:grid;
             grid-template-columns:1fr 1fr;
@@ -235,8 +224,6 @@
             font-weight:700;
             min-width:65px;
         }
-
-        /* инструкция для тестировщиков */
         .instruction-block{
             background:var(--bg-card);
             border:2px solid var(--border-light);
@@ -314,7 +301,6 @@
         <section>
             <h2 class="section-title">ПУБЛИЧНЫЙ ТЕСТНЕТ</h2>
             <div class="testnet-grid">
-                <!-- левая колонка: данные + кнопки -->
                 <div class="testnet-controls">
                     <div class="button-group">
                         <button class="btn" id="startMining" disabled>⚡ ПУСК МАЙНИНГА</button>
@@ -329,11 +315,9 @@
                         <div class="data-row"><span class="data-label">Supply:</span><span class="data-value" id="supply">—</span></div>
                     </div>
                 </div>
-                <!-- правая колонка: график защиты от сибил -->
                 <div class="chart-container">
                     <canvas id="sybilChart"></canvas>
                 </div>
-                <!-- нижний счётчик тестирующих -->
                 <div class="tester-counter">
                     <span style="font-weight:600;">👥 СЕЙЧАС ТЕСТИРУЮТ:</span>
                     <span class="counter-value" id="activeTesters">—</span>
@@ -341,14 +325,13 @@
             </div>
         </section>
 
-        <!-- БЛОК ИНСТРУКЦИИ ДЛЯ ТЕСТИРОВЩИКОВ -->
+        <!-- БЛОК ДЛЯ ТЕСТИРОВЩИКОВ -->
         <div class="instruction-block">
-            <div class="instruction-title">🚀 ПРИСОЕДИНИСЬ К ТЕСТИРОВАНИЮ (P2P + майнинг)</div>
-            <p style="margin-bottom:10px;">1️⃣ Установи Rust (если нет): <span class="instruction-code">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</span></p>
+            <div class="instruction-title">🚀 ПРИСОЕДИНЯЙСЯ К ТЕСТИРОВАНИЮ</div>
+            <p style="margin-bottom:10px;">1️⃣ Установи Rust: <span class="instruction-code">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</span></p>
             <p style="margin-bottom:10px;">2️⃣ Склонируй ноду: <span class="instruction-code">git clone https://github.com/andreudumitro-eng/accum-node</span></p>
-            <p style="margin-bottom:10px;">3️⃣ Запусти майнинг: <span class="instruction-code">cd accum-node &amp;&amp; cargo run --release</span></p>
+            <p style="margin-bottom:10px;">3️⃣ Запусти: <span class="instruction-code">cd accum-node && cargo run --release</span></p>
             <p style="margin-bottom:0;">4️⃣ Твоя нода подключится к <strong>accum.site:9337</strong> и начнёт получать награды</p>
-            <p style="margin-top:10px;color:#2a5c2a;">✅ Награда распределяется между всеми майнерами (PoCI). Количество активных — в счётчике выше.</p>
         </div>
 
         <!-- ТАБЛИЦА СРАВНЕНИЯ -->
@@ -359,10 +342,9 @@
                     <tr><th></th><th>Bitcoin</th><th>Kaspa</th><th>Monero</th><th>ACCUM</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Награда</td><td>1 победитель</td><td>1 победитель</td><td>1 победитель</td><td class="gold-cell">ВСЕ МАЙНЕРЫ</td></tr>
+                    <tr><td>Награда</td><td>1 поб.</td><td>1 поб.</td><td>1 поб.</td><td class="gold-cell">ВСЕ</td></tr>
                     <tr><td>51% атака</td><td>Выгодна</td><td>Выгодна</td><td>Выгодна</td><td class="gold-cell">НЕВЫГОДНА</td></tr>
-                    <tr><td>ASIC-устойчивость</td><td>Нет</td><td>Частично</td><td>Частично</td><td class="gold-cell">ДА (Argon2)</td></tr>
-                    <tr><td>Sybil-защита</td><td>Нет</td><td>Нет</td><td>Нет</td><td class="gold-cell">PoCI (6 факторов)</td></tr>
+                    <tr><td>ASIC-устойч.</td><td>Нет</td><td>Частично</td><td>Частично</td><td class="gold-cell">ДА</td></tr>
                 </tbody>
             </table>
         </section>
@@ -372,15 +354,15 @@
             <div class="info-card">
                 <h3 class="info-title">📦 GITHUB</h3>
                 <ul class="github-links">
-                    <li><a href="https://github.com/andreudumitro-eng/accum-node" target="_blank">⚡ accum-node (core)</a></li>
-                    <li><a href="https://github.com/andreudumitro-eng/ACCUM_whitepaper_v3.0.md" target="_blank">📄 whitepaper v3.0</a></li>
-                    <li><a href="https://github.com/andreudumitro-eng/accum.site" target="_blank">🌐 accum-site (этот сайт)</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/accum-node" target="_blank">⚡ accum-node</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/ACCUM_whitepaper_v3.0.md" target="_blank">📄 whitepaper</a></li>
+                    <li><a href="https://github.com/andreudumitro-eng/accum.site" target="_blank">🌐 accum-site</a></li>
                 </ul>
             </div>
             <div class="info-card">
                 <h3 class="info-title">🗓 ROADMAP</h3>
-                <div class="roadmap-item"><span class="roadmap-quarter">Q2 2026</span> Публичный testnet (активен)</div>
-                <div class="roadmap-item"><span class="roadmap-quarter">Q3 2026</span> Аудит, улучшения</div>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q2 2026</span> Публичный тестнет</div>
+                <div class="roadmap-item"><span class="roadmap-quarter">Q3 2026</span> Аудит</div>
                 <div class="roadmap-item"><span class="roadmap-quarter">Q4 2026</span> Mainnet</div>
             </div>
         </div>
@@ -388,39 +370,33 @@
 
     <footer class="footer">
         <div>© 2026 ACCUM — Open source · Fair launch · No premine</div>
-        <div style="margin-top:5px;">* Данные в реальном времени с testnet-ноды. Присоединяйся к майнингу!</div>
+        <div style="margin-top:5px;">* Данные для примера, не инвестиционная рекомендация</div>
     </footer>
 
     <script>
-        // переключение языков (заглушка, но кнопки работают)
         function switchLanguage(lang){
             document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
-            // здесь можно добавить перевод текста, если нужно
         }
         document.querySelectorAll('.lang-btn').forEach(b=>b.addEventListener('click',function(){switchLanguage(this.dataset.lang);}));
 
-        // WebSocket подключение к твоей ноде
         const WS_URL = 'ws://accum.site:8080';
         let socket, connected = false, chart;
 
         function connect() {
             try {
                 socket = new WebSocket(WS_URL);
-                
                 socket.onopen = () => {
                     connected = true;
                     document.getElementById('connectionStatus').innerHTML = '🟢 connected';
                     document.getElementById('startMining').disabled = false;
                     requestData();
                 };
-                
                 socket.onclose = () => {
                     connected = false;
                     document.getElementById('connectionStatus').innerHTML = '🔴 отключено';
                     document.getElementById('startMining').disabled = true;
                     setTimeout(connect, 5000);
                 };
-                
                 socket.onmessage = (e) => {
                     try {
                         const data = JSON.parse(e.data);
@@ -431,8 +407,7 @@
                             document.getElementById('txCount').textContent = data.transactions || '0';
                             document.getElementById('minerCount').textContent = data.miners || '0';
                             document.getElementById('activeTesters').textContent = data.miners || '0';
-                            const supply = data.supply ? data.supply + ' / 150M' : '—';
-                            document.getElementById('supply').textContent = supply;
+                            document.getElementById('supply').textContent = data.supply ? data.supply + ' / 150M' : '—';
                         }
                     } catch(e){}
                 };
@@ -448,13 +423,11 @@
         document.getElementById('startMining')?.addEventListener('click', () => {
             if (socket && connected) socket.send('start_mining');
         });
-
         document.getElementById('refreshData')?.addEventListener('click', requestData);
 
         connect();
-        setInterval(() => { if (connected) requestData(); }, 8000);
+        setInterval(() => { if (connected) requestData(); }, 10000);
 
-        // График Sybil-защиты (Bitcoin линейный, ACCUM выпуклый)
         const ctx = document.getElementById('sybilChart')?.getContext('2d');
         if (ctx) {
             chart = new Chart(ctx, {
@@ -462,8 +435,8 @@
                 data: {
                     labels: ['0%', '20%', '40%', '60%', '80%', '100%'],
                     datasets: [
-                        { label: 'Bitcoin (линейная)', data: [0, 20, 40, 60, 80, 100], borderColor: '#888', borderDash: [5,3] },
-                        { label: 'ACCUM (PoCI)', data: [0, 8, 18, 30, 50, 100], borderColor: '#2a5c2a', borderWidth: 3 }
+                        { label: 'Bitcoin', data: [0, 20, 40, 60, 80, 100], borderColor: '#888', borderDash: [5,3] },
+                        { label: 'ACCUM', data: [0, 8, 18, 30, 50, 100], borderColor: '#2a5c2a', borderWidth: 3 }
                     ]
                 },
                 options: {
